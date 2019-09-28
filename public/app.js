@@ -3,10 +3,38 @@ $.getJSON("/articles", function(data) {
   // For each one
   for (var i = 0; i < data.length; i++) {
     // Display the apropos information on the page
-    $("#articles").append("<p data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + data[i].link + "</p>");
+    //$("#articles").append("<p data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + data[i].link + "</p>");
+    renderCard(data[i]._id, data[i].title, data[i].teaser, data[i].link );
   }
 });
 
+function renderCard(id,title,teaser,link) {
+  const articleDiv = $("#articleDiv");
+  const card = $('<div class="card">');
+  const cardHeader = $(`<div class="d-flex justify-content-between card-header">`)
+  const articleTitle = $(`<div class="col-6"><h5><a href="${link}">${title}</a></h5></div>`);
+  const saveButton = $(`<div class="col-6"><button class="btn btn-primary" type="button" id="saveArticle">Save Article</button></div>`);
+  const cardBody = $(`<div class="card-body"><p data-id="${id}">${teaser}</p></div>`);
+
+  // render card...
+  // inner to outer...
+  cardHeader.append(articleTitle);
+  cardHeader.append(saveButton);
+  card.append(cardHeader);
+  card.append(cardBody);
+  articleDiv.append(card);
+  
+}
+
+$("#scrapeBtn").on("click", function() {
+  console.log("Scrape Button Clicked");
+  $.ajax({
+    method: "POST",
+    url: "/scrapeNPR"})
+    .then(function(data) {
+      console.log(data);
+    });
+});
 
 // Whenever someone clicks a p tag
 $(document).on("click", "p", function() {
