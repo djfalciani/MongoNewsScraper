@@ -11,7 +11,7 @@ var cheerio = require("cheerio");
 // Require all models
 var db = require("./models");
 
-var PORT = 3000;
+var PORT = process.env.PORT || 3000;
 
 // Initialize Express
 var app = express();
@@ -140,6 +140,12 @@ app.post("/articles/:id", function(req, res) {
       res.json(err);
     });
 });
+
+// Default route for Heroku
+app.get("/", function(req, res) {
+  res.json(path.join(__dirname, "public/index.html"));
+});
+
 
 // Start the server
 app.listen(PORT, function() {
